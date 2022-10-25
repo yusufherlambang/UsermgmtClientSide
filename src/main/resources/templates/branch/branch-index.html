@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+      lang="en">
+<head th:replace="~{layout :: head}">
+</head>
+<body class="main-body">
+<nav th:replace="~{layout :: navigation}"></nav>
+<header th:replace="~{layout :: header (${breadCrumbs})}"></header>
+
+<main>
+    <div class="grid-container salesman-index">
+        <form method="get" class="filter" th:attr="action=@{/branch/list}">
+            <input type="text" name="id" placeholder="search branch id" th:attr="value=${id}" />
+            <input type="text" name="name" placeholder="search branch name" th:attr="value=${name}" />
+            <select th:attr="value=${type}" name="type" >
+                <option th:value=null selected>-->Choose Type<--</option>
+                <option th:value="T1">T1</option>
+                <option th:value="T2">T2</option>
+                <option th:value="T3">T3</option>
+            </select>
+            <input type="text" name="address" placeholder="search branch address" th:attr="value=${address}" />
+            <input type="text" name="createdBy" placeholder="search created by " th:attr="value=${createdBy}" />
+            <input type="text" name="updatedBy" placeholder="search updated by" th:attr="value=${updatedBy}" />
+            <button class="blue-button" type="submit">Search</button>
+        </form>
+
+        <a class="blue-button create-button" th:href="@{/branch/upsertForm}">Insert New branch</a>
+
+        <table>
+            <thead>
+            <tr>
+                <th>Branch Id</th>
+                <th>Branch Name</th>
+                <th>Branch Type</th>
+                <th>Branch Address</th>
+                <th>Flag Active</th>
+                <th>Created By</th>
+                <th>Update By</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            <!--                grid didapat dari data yang dilempar dari Author Controller diatribute name "CustomerGrid" -->
+            <tr th:each="branch: ${gridBranch}">
+                <td th:text="${branch.id}"></td>
+                <td th:text="${branch.name}"></td>
+                <td th:text="${branch.type}"></td>
+                <td th:text="${branch.address}"></td>
+                <td th:text="${branch.flagActive}"></td>
+                <td th:text="${branch.createdBy}"></td>
+                <td th:text="${branch.updatedBy}"></td>
+                <td>
+                    <a th:href="@{/branch/upsertForm(id=${branch.id})}" class="blue-button delete-button">Edit</a>
+                    <a th:href="@{/branch/delete(id=${branch.id})}" class="blue-button delete-button">Delete</a>
+                    <a th:href="@{'/branch/' + ${branch.id}}" class="blue-button delete-button">Detail</a>
+                </td>
+
+            </tr>
+            </tbody>
+
+            <tfoot>
+            <tr>
+                <td colspan="8">
+                    <div class="pagination">
+                        <div th:text="|page ${currentPage} of ${totalPages}|">
+                        </div>
+                        <div>
+                            <a th:each="loop: ${#numbers.sequence(1, totalPages)}"
+                               th:href="@{/branch/list/(page=${loop},id=${id},name=${name},type=${type},
+                               address=${address},createdBy=${createdBy},updatedBy=${updatedBy})}"
+                               th:text="${loop}"></a>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            </tfoot>
+        </table>
+    </div>
+</main>
+
+<footer th:replace="~{layout :: footer}"></footer>
+<th:block th:replace="~{layout :: javascript}"></th:block>
+</body>
+</html>

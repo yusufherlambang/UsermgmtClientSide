@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+      lang="en">
+<!-- inject layout html and fragment called head -->
+<head th:replace="~{layout :: head}">
+</head>
+<body class="main-body">
+<nav th:replace="~{layout :: navigation}"></nav>
+
+<header th:replace="~{layout :: header (${breadCrumbs})}"></header>
+<main>
+    <form method="post" class="upsert-form alternate-action" th:object="${branch}">
+<!--        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />-->
+<!--        <input type="hidden" th:field="*{id}"/>-->
+        <table th:attr="data-action=${type}">
+
+            <tr th:if="${type == 'insert'}">
+                <td><label>Branch ID*</label></td>
+                <td>
+                    <input type="text" th:field="*{id}">
+                    <div class="field-validation-error" th:text="${errId}"></div>
+                </td>
+            </tr>
+            <tr th:if="${type == 'update'}">
+                <td><label>Branch ID*</label></td>
+                <td>
+                    <p th:text="*{id}"></p>
+                    <input type="hidden" th:field="*{id}" >
+                </td>
+            </tr>
+            <tr>
+                <td><label>Branch Name*</label></td>
+                <td>
+                    <input type="text" th:field="*{name}">
+                    <div class="field-validation-error" th:text="${errName}"></div>
+                </td>
+            </tr>
+            <tr>
+                <td><label>Branch Type*</label></td>
+                <td>
+                    <select th:field="*{type}">
+                        <option value="null" disabled >--> Choose Type <--</option>
+                        <option th:each="option : ${typeDropdown}" th:value="${option.stringValue}"
+                                th:text="${option.text}" th:selected="${option.stringValue == type}"/>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td><label>Address*</label></td>
+                <td>
+                    <input type="text" th:field="*{address}">
+                    <div class="field-validation-error" th:text="${errAddress}"></div>
+                </td>
+            </tr>
+            <tr>
+                <td><label>Flag Active</label></td>
+                <td>
+                    <input type="checkbox" th:field="*{flagActive}">
+                </td>
+            </tr>
+            <tr th:if="${type == 'insert'}">
+                <td><label>Created By*</label></td>
+                <td>
+                    <input type="text" th:field="*{createdBy}">
+                </td>
+            </tr>
+<!--            <tr th:if="${type == 'update'}">-->
+<!--                <td><label>Updated By*</label></td>-->
+<!--                <td>-->
+<!--                    <input type="text" th:field="*{updatedBy}">-->
+<!--                </td>-->
+<!--            </tr>-->
+        </table>
+        <button class="blue-button" type="submit" th:text="${type} + ' Branch'"></button>
+    </form>
+</main>
+<footer th:replace="~{layout :: footer}"></footer>
+<th:block th:replace="~{layout :: javascript}"></th:block>
+</body>
+</html>
